@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neuro-Link: Brain Trainer Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
 
@@ -70,6 +70,15 @@
             gap: 10px;
             max-width: 250px;
         }
+
+        /* Custom Scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="flex flex-col h-screen select-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800 to-slate-950">
@@ -90,13 +99,15 @@
 
         <!-- MENU SCREEN -->
         <div id="menu-screen" class="w-full max-w-lg space-y-4 text-center overflow-y-auto max-h-full py-4 no-scrollbar">
-            <div class="mb-6">
+            <div class="mb-4 pt-4">
                 <h2 class="text-3xl font-bold text-white mb-1">Select Protocol</h2>
                 <p class="text-slate-400 text-xs uppercase tracking-widest">Train specific brain regions</p>
             </div>
 
-            <div class="grid grid-cols-1 gap-3 px-2 pb-10">
-                <!-- Game 1 -->
+            <div class="grid grid-cols-1 gap-3 px-2 pb-20">
+                <!-- FOCUS & LOGIC SECTION -->
+                <p class="text-left text-xs font-bold text-slate-500 uppercase mt-2 ml-1">Core Intelligence</p>
+                
                 <button onclick="startGame('stroop')" class="game-card p-4 rounded-xl flex items-center gap-4 group">
                     <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-eye text-xl"></i>
@@ -108,7 +119,6 @@
                     <i class="fas fa-chevron-right text-slate-600"></i>
                 </button>
 
-                <!-- Game 2 -->
                 <button onclick="startGame('math')" class="game-card p-4 rounded-xl flex items-center gap-4 group">
                     <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-calculator text-xl"></i>
@@ -120,7 +130,6 @@
                     <i class="fas fa-chevron-right text-slate-600"></i>
                 </button>
 
-                <!-- Game 3 -->
                 <button onclick="startGame('memory')" class="game-card p-4 rounded-xl flex items-center gap-4 group">
                     <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-th text-xl"></i>
@@ -132,26 +141,52 @@
                     <i class="fas fa-chevron-right text-slate-600"></i>
                 </button>
 
-                <!-- Game 4 (NEW) -->
+                <!-- ADVANCED SECTION -->
+                <p class="text-left text-xs font-bold text-slate-500 uppercase mt-4 ml-1">Advanced Cognitive</p>
+
                 <button onclick="startGame('direction')" class="game-card p-4 rounded-xl flex items-center gap-4 group border-sky-500/30">
                     <div class="w-12 h-12 rounded-full bg-sky-500/20 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-compass text-xl"></i>
                     </div>
                     <div class="text-left flex-1">
                         <h3 class="font-bold text-lg text-slate-100">Direction Dash</h3>
-                        <p class="text-xs text-sky-400 font-bold">NEW: Cognitive Flexibility</p>
+                        <p class="text-xs text-sky-400 font-bold">Flexibility</p>
                     </div>
                     <i class="fas fa-chevron-right text-slate-600"></i>
                 </button>
 
-                <!-- Game 5 (NEW) -->
                 <button onclick="startGame('symbol')" class="game-card p-4 rounded-xl flex items-center gap-4 group border-amber-500/30">
                     <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-shapes text-xl"></i>
                     </div>
                     <div class="text-left flex-1">
                         <h3 class="font-bold text-lg text-slate-100">Symbol Stream</h3>
-                        <p class="text-xs text-amber-400 font-bold">NEW: Fluid IQ (N-Back)</p>
+                        <p class="text-xs text-amber-400 font-bold">Fluid IQ (N-Back)</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-600"></i>
+                </button>
+
+                <!-- CREATIVITY SECTION -->
+                <p class="text-left text-xs font-bold text-slate-500 uppercase mt-4 ml-1">Creativity Boosters</p>
+
+                <button onclick="startGame('chaos')" class="game-card p-4 rounded-xl flex items-center gap-4 group border-pink-500/30">
+                    <div class="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-random text-xl"></i>
+                    </div>
+                    <div class="text-left flex-1">
+                        <h3 class="font-bold text-lg text-slate-100">Concept Chaos</h3>
+                        <p class="text-xs text-pink-400 font-bold">Divergent Thinking</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-600"></i>
+                </button>
+
+                <button onclick="startGame('link')" class="game-card p-4 rounded-xl flex items-center gap-4 group border-teal-500/30">
+                    <div class="w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-link text-xl"></i>
+                    </div>
+                    <div class="text-left flex-1">
+                        <h3 class="font-bold text-lg text-slate-100">Rapid Link</h3>
+                        <p class="text-xs text-teal-400 font-bold">Associative Thinking</p>
                     </div>
                     <i class="fas fa-chevron-right text-slate-600"></i>
                 </button>
@@ -198,68 +233,86 @@
             <p class="text-slate-300 mb-4 text-xs font-bold uppercase tracking-widest bg-slate-800 px-4 py-2 rounded-full border border-slate-600">
                 <span class="text-green-400">GREEN = Follow</span> | <span class="text-red-400">RED = Opposite</span>
             </p>
-            
             <div class="h-40 flex items-center justify-center mb-8">
                 <i id="dash-arrow" class="fas fa-arrow-up text-8xl transition-all duration-200 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"></i>
             </div>
-
-            <!-- D-PAD Layout -->
             <div class="dpad-grid">
                 <div></div>
                 <button onclick="handleDirectionInput('up')" class="btn-game w-20 h-20 rounded-xl text-3xl text-slate-300 hover:text-white hover:bg-slate-700 active:scale-95"><i class="fas fa-arrow-up"></i></button>
                 <div></div>
-                
                 <button onclick="handleDirectionInput('left')" class="btn-game w-20 h-20 rounded-xl text-3xl text-slate-300 hover:text-white hover:bg-slate-700 active:scale-95"><i class="fas fa-arrow-left"></i></button>
                 <div class="w-20 h-20 bg-slate-800/50 rounded-full flex items-center justify-center border border-slate-700"><i class="fas fa-crosshairs text-slate-600"></i></div>
                 <button onclick="handleDirectionInput('right')" class="btn-game w-20 h-20 rounded-xl text-3xl text-slate-300 hover:text-white hover:bg-slate-700 active:scale-95"><i class="fas fa-arrow-right"></i></button>
-                
                 <div></div>
                 <button onclick="handleDirectionInput('down')" class="btn-game w-20 h-20 rounded-xl text-3xl text-slate-300 hover:text-white hover:bg-slate-700 active:scale-95"><i class="fas fa-arrow-down"></i></button>
                 <div></div>
             </div>
-            
             <div class="w-full mt-10 bg-slate-800 h-2 rounded-full overflow-hidden"><div id="direction-timer" class="h-full bg-sky-500 timer-bar"></div></div>
         </div>
 
-        <!-- GAME 5: SYMBOL STREAM (N-Back) -->
+        <!-- GAME 5: SYMBOL STREAM (N-BACK) -->
         <div id="game-symbol" class="hidden w-full max-w-md text-center flex flex-col items-center">
             <p class="text-slate-300 mb-6 text-sm text-center px-4">
                 Kya yeh symbol <span class="text-amber-400 font-bold">PICHLE WALE (Previous)</span> jaisa hai?
             </p>
-
             <div class="bg-slate-800/50 w-48 h-48 rounded-2xl border-2 border-slate-600 flex items-center justify-center mb-10 relative overflow-hidden">
-                <div id="symbol-display" class="text-7xl text-white transition-all duration-100">
-                    <i class="fas fa-question"></i>
-                </div>
-                <!-- Loading bar for symbol time -->
-                <div class="absolute bottom-0 left-0 w-full h-1 bg-slate-700">
-                    <div id="symbol-timer" class="h-full bg-amber-500 w-full"></div>
-                </div>
+                <div id="symbol-display" class="text-7xl text-white transition-all duration-100"><i class="fas fa-question"></i></div>
+                <div class="absolute bottom-0 left-0 w-full h-1 bg-slate-700"><div id="symbol-timer" class="h-full bg-amber-500 w-full"></div></div>
             </div>
-
             <div class="grid grid-cols-2 gap-6 w-full px-4">
                 <button onclick="handleSymbolInput(false)" class="p-6 rounded-xl bg-slate-800 border-2 border-slate-600 hover:bg-slate-700 text-slate-300 font-bold text-lg flex flex-col items-center gap-2">
-                    <i class="fas fa-times text-2xl text-red-400"></i> NO (Alag)
+                    <i class="fas fa-times text-2xl text-red-400"></i> NO
                 </button>
                 <button onclick="handleSymbolInput(true)" class="p-6 rounded-xl bg-slate-800 border-2 border-slate-600 hover:bg-slate-700 text-white font-bold text-lg flex flex-col items-center gap-2">
-                    <i class="fas fa-check text-2xl text-green-400"></i> YES (Same)
+                    <i class="fas fa-check text-2xl text-green-400"></i> YES
                 </button>
             </div>
             <p id="symbol-feedback" class="mt-4 h-6 text-sm font-bold opacity-0 transition-opacity">Correct!</p>
+        </div>
+
+        <!-- GAME 6: CONCEPT CHAOS (ODD ONE OUT) -->
+        <div id="game-chaos" class="hidden w-full max-w-md text-center flex flex-col items-center">
+            <p class="text-pink-300 mb-8 text-sm tracking-widest uppercase font-bold bg-pink-900/20 px-4 py-1 rounded-full border border-pink-500/30">
+                Sabse <span class="text-white">ALAG (Odd)</span> icon ko chuno!
+            </p>
+            <div id="chaos-grid" class="grid grid-cols-2 gap-6 w-full px-4">
+                <!-- Buttons injected via JS -->
+            </div>
+            <div class="w-full mt-10 bg-slate-800 h-2 rounded-full overflow-hidden"><div id="chaos-timer" class="h-full bg-pink-500 timer-bar"></div></div>
+        </div>
+
+        <!-- GAME 7: RAPID LINK (ASSOCIATION) -->
+        <div id="game-link" class="hidden w-full max-w-md text-center flex flex-col items-center">
+            <p class="text-teal-300 mb-6 text-sm tracking-widest uppercase font-bold bg-teal-900/20 px-4 py-1 rounded-full border border-teal-500/30">
+                Beech wale se kya <span class="text-white">MATCH</span> karta hai?
+            </p>
+            
+            <div class="relative w-72 h-72 flex items-center justify-center mb-4">
+                <!-- Center Icon -->
+                <div class="absolute z-10 w-24 h-24 bg-slate-700 rounded-full border-4 border-teal-500 flex items-center justify-center shadow-[0_0_30px_rgba(20,184,166,0.3)]">
+                    <i id="link-center" class="fas fa-lock text-4xl text-white"></i>
+                </div>
+
+                <!-- Orbiting Options -->
+                <button onclick="handleLinkInput(0)" id="link-opt-0" class="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-16 bg-slate-800 border border-slate-600 rounded-full flex items-center justify-center hover:bg-teal-900/50 hover:border-teal-400 transition-all active:scale-95"><i class="fas fa-key text-2xl text-slate-300"></i></button>
+                <button onclick="handleLinkInput(1)" id="link-opt-1" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-16 bg-slate-800 border border-slate-600 rounded-full flex items-center justify-center hover:bg-teal-900/50 hover:border-teal-400 transition-all active:scale-95"><i class="fas fa-car text-2xl text-slate-300"></i></button>
+                <button onclick="handleLinkInput(2)" id="link-opt-2" class="absolute left-0 top-1/2 -translate-y-1/2 w-16 h-16 bg-slate-800 border border-slate-600 rounded-full flex items-center justify-center hover:bg-teal-900/50 hover:border-teal-400 transition-all active:scale-95"><i class="fas fa-tree text-2xl text-slate-300"></i></button>
+                <button onclick="handleLinkInput(3)" id="link-opt-3" class="absolute right-0 top-1/2 -translate-y-1/2 w-16 h-16 bg-slate-800 border border-slate-600 rounded-full flex items-center justify-center hover:bg-teal-900/50 hover:border-teal-400 transition-all active:scale-95"><i class="fas fa-moon text-2xl text-slate-300"></i></button>
+            </div>
+
+            <div class="w-full mt-4 bg-slate-800 h-2 rounded-full overflow-hidden"><div id="link-timer" class="h-full bg-teal-500 timer-bar"></div></div>
         </div>
 
         <!-- GAME OVER -->
         <div id="game-over" class="hidden absolute inset-0 bg-slate-950/95 z-50 flex flex-col items-center justify-center text-center p-6 backdrop-blur-sm">
             <h2 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-red-400 to-red-600 font-[Orbitron] mb-2 tracking-widest">GAME OVER</h2>
             <p class="text-slate-400 mb-8 font-mono">Neural Connection Lost</p>
-            
             <div class="bg-slate-900 p-8 rounded-2xl border border-slate-700 w-full max-w-xs mb-8 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-50"></div>
                 <p class="text-sm text-slate-400 uppercase tracking-widest mb-2">Final Score</p>
                 <p class="text-6xl font-bold text-white mb-2 font-[Orbitron]" id="final-score">0</p>
                 <p class="text-xs text-sky-400 font-bold" id="score-comment">Focus badhao!</p>
             </div>
-
             <button onclick="backToMenu()" class="w-full max-w-xs py-4 rounded-xl font-bold text-lg text-white bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 shadow-lg shadow-sky-900/50 transition-all active:scale-95">
                 <i class="fas fa-home mr-2"></i> Main Menu
             </button>
@@ -273,9 +326,7 @@
     </main>
 
     <script>
-        // --- GAME ENGINE ---
-        
-        // Audio Context (Synthesized Sounds)
+        // --- AUDIO SYSTEM ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -287,7 +338,6 @@
             const now = audioCtx.currentTime;
             
             if (type === 'correct') {
-                // High Ping
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(800, now);
                 osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
@@ -296,7 +346,6 @@
                 osc.start(now);
                 osc.stop(now + 0.15);
             } else if (type === 'wrong') {
-                // Low Buzz
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(150, now);
                 osc.frequency.linearRampToValueAtTime(100, now + 0.3);
@@ -305,7 +354,6 @@
                 osc.start(now);
                 osc.stop(now + 0.3);
             } else if (type === 'tick') {
-                // Soft tick for memory
                 osc.type = 'square';
                 osc.frequency.setValueAtTime(400, now);
                 gainNode.gain.setValueAtTime(0.02, now);
@@ -315,20 +363,22 @@
             }
         }
 
-        // Global State
+        // --- GLOBAL STATE ---
         let gameState = {
             score: 0,
             isPlaying: false,
             timer: null,
+            memInterval: null,
             mode: '',
             difficulty: 1,
-            // Game Specific State
+            // Mode States
             lastSymbol: null,
             currentSymbol: null,
             dashCorrectDir: null,
+            chaosCorrectIndex: null,
+            linkCorrectIndex: null
         };
 
-        // Screens
         const screens = {
             menu: document.getElementById('menu-screen'),
             over: document.getElementById('game-over'),
@@ -336,21 +386,19 @@
             math: document.getElementById('game-math'),
             memory: document.getElementById('game-memory'),
             direction: document.getElementById('game-direction'),
-            symbol: document.getElementById('game-symbol')
+            symbol: document.getElementById('game-symbol'),
+            chaos: document.getElementById('game-chaos'),
+            link: document.getElementById('game-link')
         };
         const scoreDisplay = document.getElementById('current-score');
         const feedbackEl = document.getElementById('feedback-msg');
         const exitBtn = document.getElementById('exit-btn');
 
+        // --- CORE FUNCTIONS ---
         function showScreen(name) {
             Object.values(screens).forEach(s => s.classList.add('hidden'));
             if(screens[name]) screens[name].classList.remove('hidden');
-            
-            if(name !== 'menu' && name !== 'over') {
-                exitBtn.classList.remove('hidden');
-            } else {
-                exitBtn.classList.add('hidden');
-            }
+            exitBtn.classList.toggle('hidden', name === 'menu' || name === 'over');
         }
 
         function startGame(mode) {
@@ -361,18 +409,25 @@
             scoreDisplay.innerText = '0';
             showScreen(mode);
 
+            // Init Game
             if(mode === 'stroop') nextStroopRound();
             if(mode === 'math') nextMathRound();
             if(mode === 'memory') initMemory();
             if(mode === 'direction') nextDirectionRound();
             if(mode === 'symbol') initSymbol();
+            if(mode === 'chaos') nextChaosRound();
+            if(mode === 'link') nextLinkRound();
         }
 
         function backToMenu() {
             gameState.isPlaying = false;
-            if (gameState.timer) clearTimeout(gameState.timer);
-            if (gameState.symbolInterval) clearInterval(gameState.symbolInterval);
+            clearAllTimers();
             showScreen('menu');
+        }
+
+        function clearAllTimers() {
+            if (gameState.timer) clearTimeout(gameState.timer);
+            if (gameState.memInterval) clearInterval(gameState.memInterval);
         }
 
         function updateScore(points) {
@@ -386,16 +441,15 @@
         function gameOver() {
             if(!gameState.isPlaying) return;
             gameState.isPlaying = false;
-            if(gameState.timer) clearTimeout(gameState.timer);
-            if (gameState.symbolInterval) clearInterval(gameState.symbolInterval);
-            
+            clearAllTimers();
             playSound('wrong');
             showFeedback('wrong');
+            
             document.getElementById('final-score').innerText = gameState.score;
             
-            let comment = "Focus on the pattern!";
-            if(gameState.score > 20) comment = "Good reflexes!";
-            if(gameState.score > 50) comment = "Neural Link Established!";
+            let comment = "Keep practicing!";
+            if(gameState.score > 20) comment = "Getting sharper!";
+            if(gameState.score > 50) comment = "Genius Level!";
             document.getElementById('score-comment').innerText = comment;
             
             setTimeout(() => showScreen('over'), 500);
@@ -412,18 +466,12 @@
         function startTimer(elId, ms, cb) {
             if(gameState.timer) clearTimeout(gameState.timer);
             const bar = document.getElementById(elId);
-            
-            // Reset animation
             bar.style.transition = 'none';
             bar.style.width = '100%';
-            void bar.offsetWidth; // Force Reflow
-            
+            void bar.offsetWidth; 
             bar.style.transition = `width ${ms}ms linear`;
             bar.style.width = '0%';
-            
-            gameState.timer = setTimeout(() => {
-                if(gameState.isPlaying) cb();
-            }, ms);
+            gameState.timer = setTimeout(() => { if(gameState.isPlaying) cb(); }, ms);
         }
 
         // --- GAME 1: STROOP ---
@@ -433,46 +481,35 @@
             if(!gameState.isPlaying) return;
             const time = Math.max(1000, 3000 - (gameState.score * 40));
             startTimer('stroop-timer', time, gameOver);
-
             const txtIdx = Math.floor(Math.random()*4);
             const colIdx = Math.floor(Math.random()*4);
             stroopAns = colors[colIdx];
-            
             const el = document.getElementById('stroop-word');
             el.innerText = colors[txtIdx].toUpperCase();
-            
             const twColors = { 'red': 'text-red-500', 'green': 'text-green-500', 'blue': 'text-blue-500', 'yellow': 'text-yellow-400' };
             el.className = `font-[Orbitron] text-6xl font-bold mb-12 transition-all duration-100 drop-shadow-lg ${twColors[stroopAns]}`;
             el.style.transform = 'scale(0.9)';
             setTimeout(() => el.style.transform = 'scale(1)', 50);
         }
-        function handleStroopInput(c) {
-            if(c === stroopAns) { updateScore(1); nextStroopRound(); }
-            else gameOver();
-        }
+        function handleStroopInput(c) { if(c === stroopAns) { updateScore(1); nextStroopRound(); } else gameOver(); }
 
         // --- GAME 2: MATH ---
         function nextMathRound() {
             if(!gameState.isPlaying) return;
             const time = Math.max(1200, 4000 - (gameState.score * 60));
             startTimer('math-timer', time, gameOver);
-
             const n1 = Math.floor(Math.random()*(10+gameState.score)) + 1;
             const n2 = Math.floor(Math.random()*(10+gameState.score)) + 1;
             const isPlus = Math.random() > 0.5;
-            const ans = isPlus ? n1 + n2 : (n1 > n2 ? n1 - n2 : n2 - n1); // Ensure positive
+            const ans = isPlus ? n1 + n2 : (n1 > n2 ? n1 - n2 : n2 - n1);
             const txt = isPlus ? `${n1} + ${n2}` : (n1 > n2 ? `${n1} - ${n2}` : `${n2} - ${n1}`);
-
             document.getElementById('math-problem').innerText = txt;
-            
-            // Options
             let opts = [ans];
             while(opts.length < 4) {
                 let f = ans + Math.floor(Math.random()*10) - 5;
                 if(f !== ans && f >= 0 && !opts.includes(f)) opts.push(f);
             }
             opts.sort(() => Math.random() - 0.5);
-
             const cont = document.getElementById('math-options');
             cont.innerHTML = '';
             opts.forEach(o => {
@@ -501,22 +538,24 @@
         }
         function nextMemLevel() {
             if(!gameState.isPlaying) return;
-            usrSeq = [];
-            memLock = true;
+            usrSeq = []; memLock = true;
             document.getElementById('memory-instruction').innerText = "WATCH...";
             document.getElementById('memory-instruction').className = "text-sky-400 mb-6 text-sm font-bold uppercase tracking-widest";
             memSeq.push(Math.floor(Math.random()*9));
             document.getElementById('memory-level').innerText = memSeq.length;
-
             let i=0;
-            const int = setInterval(() => {
+            gameState.memInterval = setInterval(() => {
+                if(!gameState.isPlaying) { clearInterval(gameState.memInterval); return; }
                 const cells = document.querySelectorAll('.memory-cell');
-                cells[memSeq[i]].classList.add('active');
-                playSound('tick');
-                setTimeout(() => cells[memSeq[i]].classList.remove('active'), 400);
+                const currentIdx = memSeq[i]; // Fix closure issue
+                if(cells[currentIdx]) {
+                    cells[currentIdx].classList.add('active');
+                    playSound('tick');
+                    setTimeout(() => { if(cells[currentIdx]) cells[currentIdx].classList.remove('active'); }, 400);
+                }
                 i++;
                 if(i >= memSeq.length) {
-                    clearInterval(int);
+                    clearInterval(gameState.memInterval);
                     memLock = false;
                     setTimeout(() => {
                         document.getElementById('memory-instruction').innerText = "REPEAT!";
@@ -531,34 +570,22 @@
             cells[idx].classList.add('user-correct');
             setTimeout(() => cells[idx].classList.remove('user-correct'), 200);
             playSound('tick');
-            
             usrSeq.push(idx);
             if(usrSeq[usrSeq.length-1] !== memSeq[usrSeq.length-1]) {
-                cells[idx].classList.remove('user-correct');
-                cells[idx].classList.add('user-wrong');
-                gameOver();
-                return;
+                cells[idx].classList.remove('user-correct'); cells[idx].classList.add('user-wrong'); gameOver(); return;
             }
-            if(usrSeq.length === memSeq.length) {
-                updateScore(5);
-                setTimeout(nextMemLevel, 1000);
-            }
+            if(usrSeq.length === memSeq.length) { updateScore(5); setTimeout(nextMemLevel, 1000); }
         }
 
         // --- GAME 4: DIRECTION DASH ---
         const dirs = ['up', 'down', 'left', 'right'];
         const dirIcons = {'up': 'fa-arrow-up', 'down': 'fa-arrow-down', 'left': 'fa-arrow-left', 'right': 'fa-arrow-right'};
-        
         function nextDirectionRound() {
             if(!gameState.isPlaying) return;
-            
             const time = Math.max(1000, 2500 - (gameState.score * 40));
             startTimer('direction-timer', time, gameOver);
-
             const visualDir = dirs[Math.floor(Math.random() * 4)];
-            const isGreen = Math.random() > 0.4; // 60% chance green (easier habit)
-            
-            // LOGIC: Green = same, Red = opposite
+            const isGreen = Math.random() > 0.4; 
             let correctDir = visualDir;
             if(!isGreen) {
                 if(visualDir === 'up') correctDir = 'down';
@@ -567,102 +594,164 @@
                 if(visualDir === 'right') correctDir = 'left';
             }
             gameState.dashCorrectDir = correctDir;
-
             const arrow = document.getElementById('dash-arrow');
             arrow.className = `fas ${dirIcons[visualDir]} text-8xl transition-all duration-200 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] ${isGreen ? 'text-green-500' : 'text-red-500'}`;
-            
-            // Pop effect
-            arrow.style.transform = 'scale(0.5)';
-            setTimeout(() => arrow.style.transform = 'scale(1)', 50);
+            arrow.style.transform = 'scale(0.5)'; setTimeout(() => arrow.style.transform = 'scale(1)', 50);
         }
-
         function handleDirectionInput(dir) {
             if(!gameState.isPlaying) return;
-            if(dir === gameState.dashCorrectDir) {
-                updateScore(1);
-                nextDirectionRound();
-            } else {
-                gameOver();
-            }
+            if(dir === gameState.dashCorrectDir) { updateScore(1); nextDirectionRound(); } else { gameOver(); }
         }
 
-        // --- GAME 5: SYMBOL STREAM (N-BACK) ---
+        // --- GAME 5: SYMBOL STREAM ---
         const symbols = ['fa-star', 'fa-heart', 'fa-bolt', 'fa-moon', 'fa-cloud', 'fa-ghost', 'fa-gem'];
-        
-        function initSymbol() {
-            gameState.lastSymbol = null;
-            gameState.currentSymbol = null;
-            nextSymbolRound();
-        }
-
+        function initSymbol() { gameState.lastSymbol = null; gameState.currentSymbol = null; nextSymbolRound(); }
         function nextSymbolRound() {
             if(!gameState.isPlaying) return;
-
-            // Prepare next symbol
-            // Logic: 40% chance of being same as last to force memory check
             let nextSym;
-            if(gameState.lastSymbol && Math.random() < 0.4) {
-                nextSym = gameState.lastSymbol;
-            } else {
+            if(gameState.lastSymbol && Math.random() < 0.4) nextSym = gameState.lastSymbol;
+            else {
                 nextSym = symbols[Math.floor(Math.random() * symbols.length)];
-                // Avoid accidental same if random picked same
-                if(gameState.lastSymbol && nextSym === gameState.lastSymbol && Math.random() > 0.5) {
-                    // Try to change it (simple retry)
-                     nextSym = symbols[Math.floor(Math.random() * symbols.length)];
-                }
+                if(gameState.lastSymbol && nextSym === gameState.lastSymbol && Math.random() > 0.5) nextSym = symbols[Math.floor(Math.random() * symbols.length)];
             }
-
-            // Move current to last
-            gameState.lastSymbol = gameState.currentSymbol;
-            gameState.currentSymbol = nextSym;
-
-            // Display
+            gameState.lastSymbol = gameState.currentSymbol; gameState.currentSymbol = nextSym;
             const display = document.getElementById('symbol-display');
             display.innerHTML = `<i class="fas ${nextSym}"></i>`;
-            display.style.transform = 'scale(0.5)';
-            display.style.opacity = '0';
-            setTimeout(() => {
-                display.style.transform = 'scale(1)';
-                display.style.opacity = '1';
-            }, 50);
-
-            // Timer (This game is auto-running/reaction based)
-            // But to keep it simple for user UI: wait for input
-            // If it's the first round, auto-skip or tell user to wait?
-            // Let's make it input based. User MUST click Yes or No.
-            
+            display.style.transform = 'scale(0.5)'; display.style.opacity = '0';
+            setTimeout(() => { display.style.transform = 'scale(1)'; display.style.opacity = '1'; }, 50);
             const time = Math.max(1500, 3000 - (gameState.score * 30));
-            startTimer('symbol-timer', time, gameOver); // User must decide quickly
+            startTimer('symbol-timer', time, gameOver);
         }
-
         function handleSymbolInput(userSaysSame) {
             if(!gameState.isPlaying) return;
-
-            // First round special case: No previous symbol
-            if(gameState.lastSymbol === null) {
-                // Technically "No" is correct, or we just give free pass
-                // Let's treat it as "New Start", give pass but no points?
-                // Or easier: Just Generate new round and tell user "Remember This"
-                const fb = document.getElementById('symbol-feedback');
-                fb.innerText = "Memorize this...";
-                fb.style.opacity = 1;
-                setTimeout(() => fb.style.opacity = 0, 500);
-                
-                // Don't update score, just next
-                nextSymbolRound();
-                return;
-            }
-
+            if(gameState.lastSymbol === null) { nextSymbolRound(); return; }
             const isActuallySame = (gameState.currentSymbol === gameState.lastSymbol);
+            if(userSaysSame === isActuallySame) { updateScore(1); nextSymbolRound(); } else { gameOver(); }
+        }
 
-            if(userSaysSame === isActuallySame) {
-                updateScore(1);
-                nextSymbolRound();
-            } else {
-                gameOver();
+        // --- GAME 6: CONCEPT CHAOS (CREATIVITY) ---
+        const chaosCategories = {
+            'fruit': ['fa-apple-whole', 'fa-lemon', 'fa-carrot', 'fa-leaf'],
+            'vehicle': ['fa-car', 'fa-bus', 'fa-plane', 'fa-truck'],
+            'tech': ['fa-laptop', 'fa-mobile', 'fa-microchip', 'fa-wifi'],
+            'space': ['fa-moon', 'fa-star', 'fa-meteor', 'fa-rocket'],
+            'animal': ['fa-dog', 'fa-cat', 'fa-crow', 'fa-fish']
+        };
+        const chaosKeys = Object.keys(chaosCategories);
+
+        function nextChaosRound() {
+            if(!gameState.isPlaying) return;
+            const time = Math.max(1500, 4000 - (gameState.score * 50));
+            startTimer('chaos-timer', time, gameOver);
+
+            // 1. Pick main category
+            const mainCatIdx = Math.floor(Math.random() * chaosKeys.length);
+            const mainCatKey = chaosKeys[mainCatIdx];
+            
+            // 2. Pick odd category
+            let oddCatIdx = Math.floor(Math.random() * chaosKeys.length);
+            while(oddCatIdx === mainCatIdx) oddCatIdx = Math.floor(Math.random() * chaosKeys.length);
+            const oddCatKey = chaosKeys[oddCatIdx];
+
+            // 3. Select 3 items from main, 1 from odd
+            let mainItems = [...chaosCategories[mainCatKey]].sort(() => 0.5 - Math.random()).slice(0, 3);
+            let oddItem = chaosCategories[oddCatKey][Math.floor(Math.random() * 4)];
+
+            // 4. Combine and shuffle
+            let roundItems = [...mainItems, oddItem];
+            // Track the odd item's correct index
+            gameState.chaosCorrectIndex = -1; // Temp
+            
+            // Shuffle
+            let shuffled = roundItems.map((value) => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value);
+            
+            gameState.chaosCorrectIndex = shuffled.indexOf(oddItem);
+
+            // Render
+            const grid = document.getElementById('chaos-grid');
+            grid.innerHTML = '';
+            shuffled.forEach((icon, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "p-6 rounded-2xl bg-slate-800 border-2 border-slate-600 hover:bg-pink-900/30 hover:border-pink-500 transition-all active:scale-95 flex items-center justify-center";
+                btn.innerHTML = `<i class="fas ${icon} text-4xl text-slate-300"></i>`;
+                btn.onclick = () => handleChaosInput(idx);
+                grid.appendChild(btn);
+            });
+        }
+
+        function handleChaosInput(idx) {
+            if(!gameState.isPlaying) return;
+            if(idx === gameState.chaosCorrectIndex) { updateScore(1); nextChaosRound(); }
+            else gameOver();
+        }
+
+        // --- GAME 7: RAPID LINK (ASSOCIATION) ---
+        // Pairs of related items
+        const linkPairs = [
+            { c: 'fa-lock', m: 'fa-key' },         // Lock -> Key
+            { c: 'fa-cloud', m: 'fa-umbrella' },   // Cloud -> Umbrella
+            { c: 'fa-envelope', m: 'fa-paper-plane' }, // Mail -> Send
+            { c: 'fa-lightbulb', m: 'fa-bolt' },   // Bulb -> Power
+            { c: 'fa-graduation-cap', m: 'fa-book' }, // Grad -> Book
+            { c: 'fa-gamepad', m: 'fa-ghost' },    // Game -> Enemy
+            { c: 'fa-moon', m: 'fa-bed' },         // Moon -> Sleep
+            { c: 'fa-music', m: 'fa-headphones' }, // Music -> Listen
+            { c: 'fa-utensils', m: 'fa-burger' },  // Eat -> Food
+            { c: 'fa-gas-pump', m: 'fa-car' }      // Fuel -> Car
+        ];
+        // Distractors pool
+        const linkDistractors = ['fa-fish', 'fa-tree', 'fa-shoe-prints', 'fa-anchor', 'fa-bell', 'fa-camera', 'fa-fire', 'fa-snowflake'];
+
+        function nextLinkRound() {
+            if(!gameState.isPlaying) return;
+            const time = Math.max(1500, 3500 - (gameState.score * 40));
+            startTimer('link-timer', time, gameOver);
+
+            // Pick pair
+            const pair = linkPairs[Math.floor(Math.random() * linkPairs.length)];
+            
+            // Render Center
+            document.getElementById('link-center').className = `fas ${pair.c} text-4xl text-white`;
+
+            // Setup Options (1 Correct, 3 Wrong)
+            let options = [pair.m];
+            while(options.length < 4) {
+                let d = linkDistractors[Math.floor(Math.random() * linkDistractors.length)];
+                if(!options.includes(d) && d !== pair.m && d !== pair.c) options.push(d);
             }
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+            gameState.linkCorrectIndex = options.indexOf(pair.m);
+
+            // Render Orbit Buttons
+            for(let i=0; i<4; i++) {
+                const btn = document.getElementById(`link-opt-${i}`);
+                btn.innerHTML = `<i class="fas ${options[i]} text-2xl text-slate-300"></i>`;
+                // Add pop animation
+                btn.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                setTimeout(() => {
+                   // Need to respect position logic in CSS, so just reset scale
+                   // Actually CSS handles position via top/left classes, transform handles centering
+                   // Just resetting inline transform might break centering logic if not careful
+                   // Let's just rely on active:scale-95 for feedback
+                   btn.style.transform = ''; // Clear inline to let CSS take over (but CSS has translate)
+                   // Re-apply the translate manually if clearing
+                   if(i===0) btn.style.transform = 'translateX(-50%) scale(1)';
+                   if(i===1) btn.style.transform = 'translateX(-50%) scale(1)';
+                   if(i===2) btn.style.transform = 'translateY(-50%) scale(1)';
+                   if(i===3) btn.style.transform = 'translateY(-50%) scale(1)';
+                }, 50);
+            }
+        }
+
+        function handleLinkInput(idx) {
+            if(!gameState.isPlaying) return;
+            if(idx === gameState.linkCorrectIndex) { updateScore(1); nextLinkRound(); }
+            else gameOver();
         }
 
     </script>
 </body>
-                  </html>
+    </html>
