@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuro-Link: Brain Trainer Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
+
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Rajdhani', sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        /* Animations & Effects */
+        .game-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            transition: transform 0.2s, border-color 0.2s, background 0.2s;
+        }
+        .game-card:active { transform: scale(0.98); }
+        .game-card:hover { border-color: rgba(56, 189, 248, 0.6); background: rgba(30, 41, 59, 0.95); }
+
+        .btn-game {
+            background: rgba(51, 65, 85, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-game:active { transform: scale(0.95); background: rgba(51, 65, 85, 0.8); }
+
+        .memory-cell {
+            aspect-ratio: 1;
+            background: #334155;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 2px solid #475569;
+        }
+        .memory-cell.active { background: #00ff9d; box-shadow: 0 0 20px #00ff9d; border-color: #fff; }
+        .memory-cell.user-correct { background: #3b82f6; }
+        .memory-cell.user-wrong { background: #ef4444; animation: shake 0.5s; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .timer-bar { transition: width 0.1s linear; }
+        .hidden { display: none !important; }
+
+        /* Feedback Animation */
+        .feedback-text {
+            font-size: 4rem; font-weight: bold; opacity: 0;
+            transform: scale(0.5); transition: all 0.3s ease-out;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .feedback-text.show { opacity: 1; transform: scale(1.2); }
+
+        /* Direction Dash Grid */
+        .dpad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 250px;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen select-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800 to-slate-950">
+
+    <!-- Header -->
+    <header class="p-4 flex justify-between items-center border-b border-slate-700 bg-slate-900/80 backdrop-blur-md z-20">
+        <div class="flex items-center gap-2">
+            <i class="fas fa-brain text-sky-400 text-2xl animate-pulse"></i>
+            <h1 class="text-xl font-bold tracking-wider font-[Orbitron] text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">NEURO-LINK Pro</h1>
+        </div>
+        <div class="text-sm text-slate-400 font-mono">
+            SCORE: <span id="current-score" class="text-sky-400 font-bold text-lg">0</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 relative overflow-hidden flex flex-col items-center justify-center p-4 w-full">
+
+        <!-- MENU SCREEN -->
+        <div id="menu-screen" class="w-full max-w-lg space-y-4 text-center overflow-y-auto max-h-full py-4 no-scrollbar">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-white mb-1">Select Protocol</h2>
+                <p class="text-slate-400 text-xs uppercase tracking-widest">Train specific brain regions</p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-3 px-2 pb-10">
+                <!-- Game 1 -->
+                <button onclick="startGame('stroop')" class="game-card p-4 rounded-xl flex items-center gap-4 group">
+                    <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-eye text-xl"></i>
+                    </div>
+                    <div class="text-left flex-1">
+                        <h3 class="font-bold text-lg text-slate-100">Color Conflict</h3>
+                        <p class="text-xs text-slate-400">Impulse Control & Focus</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-600"></i>
+                </button>
+
+                <!-- Game 2 -->
+                <button onclick="startGame('math')" class="game-card p-4 rounded-xl flex items-center gap-4 group">
+                    <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-calculator text-xl"></i>
+                    </div>
+                    <div class="text-left flex-1">
+                        <h3 class="font-bold text-lg text-slate-100">Speed Logic</h3>
+                        <p class="text-xs text-slate-400">Processing Speed</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-600"></i>
+                </button>
+
+                <!-- Game 3 -->
+                <button onclick="startGame('memory')" class="game-card p-4 rounded-xl flex items-center gap-4 group">
+                    <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-th text-xl"></i>
+                    </div>
+                    <div class="text-left flex-1">
+                        <h3 class="font-bold text-lg text-slate-100">Grid Recall</h3>
+                        <p class="text-xs text-slate-400">Visual Memory</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-600"></i>
+                </button>
+
+                <!-- Game 4 (NEW) -->
+                <button onclick="startGame('direction')" class="game-card p-4 rounded-xl flex items-center gap-4 group border-sky-500/30">
+                    <div class="w-12 h-12 rounded-full bg-sky-500/20 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-compass text-xl"></i>
+                    </div>
+                    <div class="text-left flex-1">
+                        <h3 class="font-bold text-lg text-slate-100">Direction Dash</h3>
+                        <p class="text-xs text-sky-400 font-bold">NEW: Cognitive Flexibility</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-600"></i>
+                </button>
+
+                <!-- Game 5 (NEW) -->
+                <button onclick="startGame('symbol')" class="game-card p-4 rounded-xl flex items-center gap-4 group border-amber-500/30">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-shapes text-xl"></i>
+                    </div>
+                    <div class="text-left flex-1">
+                        <h3 class="font-bold text-lg text-slate-100">Symbol Stream</h3>
+                        <p class="text-xs text-amber-400 font-bold">NEW: Fluid IQ (N-Back)</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-slate-600"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- EXIT BUTTON (Inside Game) -->
+        <button onclick="backToMenu()" id="exit-btn" class="hidden absolute top-2 left-4 z-30 text-slate-500 hover:text-white p-2">
+            <i class="fas fa-arrow-left mr-2"></i> EXIT
+        </button>
+
+        <!-- GAME 1: STROOP -->
+        <div id="game-stroop" class="hidden w-full max-w-md text-center flex flex-col items-center">
+            <p class="text-slate-400 mb-8 text-sm tracking-widest uppercase">Shabd ka <span class="text-white font-bold">RANG</span> chuno!</p>
+            <div id="stroop-word" class="font-[Orbitron] text-6xl font-bold mb-12 transition-all duration-100 drop-shadow-lg">RED</div>
+            <div class="grid grid-cols-2 gap-4 w-full">
+                <button onclick="handleStroopInput('red')" class="p-6 rounded-xl bg-red-900/30 border border-red-500/50 hover:bg-red-500/20 text-red-400 font-bold text-xl">RED</button>
+                <button onclick="handleStroopInput('green')" class="p-6 rounded-xl bg-green-900/30 border border-green-500/50 hover:bg-green-500/20 text-green-400 font-bold text-xl">GREEN</button>
+                <button onclick="handleStroopInput('blue')" class="p-6 rounded-xl bg-blue-900/30 border border-blue-500/50 hover:bg-blue-500/20 text-blue-400 font-bold text-xl">BLUE</button>
+                <button onclick="handleStroopInput('yellow')" class="p-6 rounded-xl bg-yellow-900/30 border border-yellow-500/50 hover:bg-yellow-500/20 text-yellow-400 font-bold text-xl">YELLOW</button>
+            </div>
+            <div class="w-full mt-8 bg-slate-800 h-2 rounded-full overflow-hidden"><div id="stroop-timer" class="h-full bg-red-500 timer-bar"></div></div>
+        </div>
+
+        <!-- GAME 2: MATH -->
+        <div id="game-math" class="hidden w-full max-w-md text-center">
+            <p class="text-slate-400 mb-8 text-sm tracking-widest uppercase">Tez hisaab lagao!</p>
+            <div class="bg-slate-800/80 p-10 rounded-2xl border border-slate-600 mb-8 shadow-2xl">
+                <div id="math-problem" class="text-6xl font-bold font-[Orbitron] text-white">12 + 5</div>
+            </div>
+            <div id="math-options" class="grid grid-cols-2 gap-4 text-2xl font-bold font-[Orbitron]"></div>
+            <div class="w-full mt-8 bg-slate-800 h-2 rounded-full overflow-hidden"><div id="math-timer" class="h-full bg-green-500 timer-bar"></div></div>
+        </div>
+
+        <!-- GAME 3: MEMORY -->
+        <div id="game-memory" class="hidden w-full max-w-md text-center">
+            <p id="memory-instruction" class="text-slate-400 mb-6 text-sm font-bold uppercase tracking-widest">Pattern Dekho...</p>
+            <div class="memory-grid mb-8" id="memory-grid"></div>
+            <p class="text-sm text-slate-500">Sequence Length: <span id="memory-level" class="text-white font-bold text-lg">1</span></p>
+        </div>
+
+        <!-- GAME 4: DIRECTION DASH -->
+        <div id="game-direction" class="hidden w-full max-w-md text-center flex flex-col items-center">
+            <p class="text-slate-300 mb-4 text-xs font-bold uppercase tracking-widest bg-slate-800 px-4 py-2 rounded-full border border-slate-600">
+                <span class="text-green-400">GREEN = Follow</span> | <span class="text-red-400">RED = Opposite</span>
+            </p>
+            
+            <div class="h-40 flex items-center justify-center mb-8">
+                <i id="dash-arrow" class="fas fa-arrow-up text-8xl transition-all duration-200 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"></i>
+            </div>
+
+            <!-- D-PAD Layout -->
+            <div class="dpad-grid">
+                <div></div>
+                <button onclick="handleDirectionInput('up')" class="btn-game w-20 h-20 rounded-xl text-3xl text-slate-300 hover:text-white hover:bg-slate-700 active:scale-95"><i class="fas fa-arrow-up"></i></button>
+                <div></div>
+                
+                <button onclick="handleDirectionInput('left')" class="btn-game w-20 h-20 rounded-xl text-3xl text-slate-300 hover:text-white hover:bg-slate-700 active:scale-95"><i class="fas fa-arrow-left"></i></button>
+                <div class="w-20 h-20 bg-slate-800/50 rounded-full flex items-center justify-center border border-slate-700"><i class="fas fa-crosshairs text-slate-600"></i></div>
+                <button onclick="handleDirectionInput('right')" class="btn-game w-20 h-20 rounded-xl text-3xl text-slate-300 hover:text-white hover:bg-slate-700 active:scale-95"><i class="fas fa-arrow-right"></i></button>
+                
+                <div></div>
+                <button onclick="handleDirectionInput('down')" class="btn-game w-20 h-20 rounded-xl text-3xl text-slate-300 hover:text-white hover:bg-slate-700 active:scale-95"><i class="fas fa-arrow-down"></i></button>
+                <div></div>
+            </div>
+            
+            <div class="w-full mt-10 bg-slate-800 h-2 rounded-full overflow-hidden"><div id="direction-timer" class="h-full bg-sky-500 timer-bar"></div></div>
+        </div>
+
+        <!-- GAME 5: SYMBOL STREAM (N-Back) -->
+        <div id="game-symbol" class="hidden w-full max-w-md text-center flex flex-col items-center">
+            <p class="text-slate-300 mb-6 text-sm text-center px-4">
+                Kya yeh symbol <span class="text-amber-400 font-bold">PICHLE WALE (Previous)</span> jaisa hai?
+            </p>
+
+            <div class="bg-slate-800/50 w-48 h-48 rounded-2xl border-2 border-slate-600 flex items-center justify-center mb-10 relative overflow-hidden">
+                <div id="symbol-display" class="text-7xl text-white transition-all duration-100">
+                    <i class="fas fa-question"></i>
+                </div>
+                <!-- Loading bar for symbol time -->
+                <div class="absolute bottom-0 left-0 w-full h-1 bg-slate-700">
+                    <div id="symbol-timer" class="h-full bg-amber-500 w-full"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 w-full px-4">
+                <button onclick="handleSymbolInput(false)" class="p-6 rounded-xl bg-slate-800 border-2 border-slate-600 hover:bg-slate-700 text-slate-300 font-bold text-lg flex flex-col items-center gap-2">
+                    <i class="fas fa-times text-2xl text-red-400"></i> NO (Alag)
+                </button>
+                <button onclick="handleSymbolInput(true)" class="p-6 rounded-xl bg-slate-800 border-2 border-slate-600 hover:bg-slate-700 text-white font-bold text-lg flex flex-col items-center gap-2">
+                    <i class="fas fa-check text-2xl text-green-400"></i> YES (Same)
+                </button>
+            </div>
+            <p id="symbol-feedback" class="mt-4 h-6 text-sm font-bold opacity-0 transition-opacity">Correct!</p>
+        </div>
+
+        <!-- GAME OVER -->
+        <div id="game-over" class="hidden absolute inset-0 bg-slate-950/95 z-50 flex flex-col items-center justify-center text-center p-6 backdrop-blur-sm">
+            <h2 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-red-400 to-red-600 font-[Orbitron] mb-2 tracking-widest">GAME OVER</h2>
+            <p class="text-slate-400 mb-8 font-mono">Neural Connection Lost</p>
+            
+            <div class="bg-slate-900 p-8 rounded-2xl border border-slate-700 w-full max-w-xs mb-8 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-50"></div>
+                <p class="text-sm text-slate-400 uppercase tracking-widest mb-2">Final Score</p>
+                <p class="text-6xl font-bold text-white mb-2 font-[Orbitron]" id="final-score">0</p>
+                <p class="text-xs text-sky-400 font-bold" id="score-comment">Focus badhao!</p>
+            </div>
+
+            <button onclick="backToMenu()" class="w-full max-w-xs py-4 rounded-xl font-bold text-lg text-white bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 shadow-lg shadow-sky-900/50 transition-all active:scale-95">
+                <i class="fas fa-home mr-2"></i> Main Menu
+            </button>
+        </div>
+
+        <!-- Feedback Overlay -->
+        <div class="feedback-overlay">
+            <div id="feedback-msg" class="feedback-text text-green-400">TEZ!</div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- GAME ENGINE ---
+        
+        // Audio Context (Synthesized Sounds)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+            
+            if (type === 'correct') {
+                // High Ping
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                gainNode.gain.setValueAtTime(0.1, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now);
+                osc.stop(now + 0.15);
+            } else if (type === 'wrong') {
+                // Low Buzz
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(100, now + 0.3);
+                gainNode.gain.setValueAtTime(0.15, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'tick') {
+                // Soft tick for memory
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(400, now);
+                gainNode.gain.setValueAtTime(0.02, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            }
+        }
+
+        // Global State
+        let gameState = {
+            score: 0,
+            isPlaying: false,
+            timer: null,
+            mode: '',
+            difficulty: 1,
+            // Game Specific State
+            lastSymbol: null,
+            currentSymbol: null,
+            dashCorrectDir: null,
+        };
+
+        // Screens
+        const screens = {
+            menu: document.getElementById('menu-screen'),
+            over: document.getElementById('game-over'),
+            stroop: document.getElementById('game-stroop'),
+            math: document.getElementById('game-math'),
+            memory: document.getElementById('game-memory'),
+            direction: document.getElementById('game-direction'),
+            symbol: document.getElementById('game-symbol')
+        };
+        const scoreDisplay = document.getElementById('current-score');
+        const feedbackEl = document.getElementById('feedback-msg');
+        const exitBtn = document.getElementById('exit-btn');
+
+        function showScreen(name) {
+            Object.values(screens).forEach(s => s.classList.add('hidden'));
+            if(screens[name]) screens[name].classList.remove('hidden');
+            
+            if(name !== 'menu' && name !== 'over') {
+                exitBtn.classList.remove('hidden');
+            } else {
+                exitBtn.classList.add('hidden');
+            }
+        }
+
+        function startGame(mode) {
+            gameState.score = 0;
+            gameState.difficulty = 1;
+            gameState.isPlaying = true;
+            gameState.mode = mode;
+            scoreDisplay.innerText = '0';
+            showScreen(mode);
+
+            if(mode === 'stroop') nextStroopRound();
+            if(mode === 'math') nextMathRound();
+            if(mode === 'memory') initMemory();
+            if(mode === 'direction') nextDirectionRound();
+            if(mode === 'symbol') initSymbol();
+        }
+
+        function backToMenu() {
+            gameState.isPlaying = false;
+            if (gameState.timer) clearTimeout(gameState.timer);
+            if (gameState.symbolInterval) clearInterval(gameState.symbolInterval);
+            showScreen('menu');
+        }
+
+        function updateScore(points) {
+            gameState.score += points;
+            scoreDisplay.innerText = gameState.score;
+            if(gameState.score % 10 === 0) gameState.difficulty += 0.2;
+            showFeedback('correct');
+            playSound('correct');
+        }
+
+        function gameOver() {
+            if(!gameState.isPlaying) return;
+            gameState.isPlaying = false;
+            if(gameState.timer) clearTimeout(gameState.timer);
+            if (gameState.symbolInterval) clearInterval(gameState.symbolInterval);
+            
+            playSound('wrong');
+            showFeedback('wrong');
+            document.getElementById('final-score').innerText = gameState.score;
+            
+            let comment = "Focus on the pattern!";
+            if(gameState.score > 20) comment = "Good reflexes!";
+            if(gameState.score > 50) comment = "Neural Link Established!";
+            document.getElementById('score-comment').innerText = comment;
+            
+            setTimeout(() => showScreen('over'), 500);
+        }
+
+        function showFeedback(type) {
+            const msgs = type === 'correct' ? ['GOOD!', 'NICE!', 'FAST!', 'SHARP!'] : ['OOPS!', 'NO!', 'WRONG!'];
+            const msg = msgs[Math.floor(Math.random()*msgs.length)];
+            feedbackEl.innerText = msg;
+            feedbackEl.className = `feedback-text show ${type === 'correct' ? 'text-green-400' : 'text-red-500'}`;
+            setTimeout(() => feedbackEl.classList.remove('show'), 400);
+        }
+
+        function startTimer(elId, ms, cb) {
+            if(gameState.timer) clearTimeout(gameState.timer);
+            const bar = document.getElementById(elId);
+            
+            // Reset animation
+            bar.style.transition = 'none';
+            bar.style.width = '100%';
+            void bar.offsetWidth; // Force Reflow
+            
+            bar.style.transition = `width ${ms}ms linear`;
+            bar.style.width = '0%';
+            
+            gameState.timer = setTimeout(() => {
+                if(gameState.isPlaying) cb();
+            }, ms);
+        }
+
+        // --- GAME 1: STROOP ---
+        const colors = ['red', 'green', 'blue', 'yellow'];
+        let stroopAns = '';
+        function nextStroopRound() {
+            if(!gameState.isPlaying) return;
+            const time = Math.max(1000, 3000 - (gameState.score * 40));
+            startTimer('stroop-timer', time, gameOver);
+
+            const txtIdx = Math.floor(Math.random()*4);
+            const colIdx = Math.floor(Math.random()*4);
+            stroopAns = colors[colIdx];
+            
+            const el = document.getElementById('stroop-word');
+            el.innerText = colors[txtIdx].toUpperCase();
+            
+            const twColors = { 'red': 'text-red-500', 'green': 'text-green-500', 'blue': 'text-blue-500', 'yellow': 'text-yellow-400' };
+            el.className = `font-[Orbitron] text-6xl font-bold mb-12 transition-all duration-100 drop-shadow-lg ${twColors[stroopAns]}`;
+            el.style.transform = 'scale(0.9)';
+            setTimeout(() => el.style.transform = 'scale(1)', 50);
+        }
+        function handleStroopInput(c) {
+            if(c === stroopAns) { updateScore(1); nextStroopRound(); }
+            else gameOver();
+        }
+
+        // --- GAME 2: MATH ---
+        function nextMathRound() {
+            if(!gameState.isPlaying) return;
+            const time = Math.max(1200, 4000 - (gameState.score * 60));
+            startTimer('math-timer', time, gameOver);
+
+            const n1 = Math.floor(Math.random()*(10+gameState.score)) + 1;
+            const n2 = Math.floor(Math.random()*(10+gameState.score)) + 1;
+            const isPlus = Math.random() > 0.5;
+            const ans = isPlus ? n1 + n2 : (n1 > n2 ? n1 - n2 : n2 - n1); // Ensure positive
+            const txt = isPlus ? `${n1} + ${n2}` : (n1 > n2 ? `${n1} - ${n2}` : `${n2} - ${n1}`);
+
+            document.getElementById('math-problem').innerText = txt;
+            
+            // Options
+            let opts = [ans];
+            while(opts.length < 4) {
+                let f = ans + Math.floor(Math.random()*10) - 5;
+                if(f !== ans && f >= 0 && !opts.includes(f)) opts.push(f);
+            }
+            opts.sort(() => Math.random() - 0.5);
+
+            const cont = document.getElementById('math-options');
+            cont.innerHTML = '';
+            opts.forEach(o => {
+                const b = document.createElement('button');
+                b.className = "p-4 rounded-xl bg-slate-700 hover:bg-slate-600 border border-slate-600 active:bg-slate-500 transition-colors";
+                b.innerText = o;
+                b.onclick = () => { if(o === ans) { updateScore(1); nextMathRound(); } else gameOver(); };
+                cont.appendChild(b);
+            });
+        }
+
+        // --- GAME 3: MEMORY ---
+        let memSeq = [], usrSeq = [], memLock = false;
+        function initMemory() {
+            const g = document.getElementById('memory-grid');
+            g.innerHTML = '';
+            g.className = 'grid grid-cols-3 gap-3 w-64 mx-auto mb-8';
+            for(let i=0; i<9; i++) {
+                const d = document.createElement('div');
+                d.className = 'memory-cell';
+                d.onclick = () => handleMemClick(i);
+                g.appendChild(d);
+            }
+            memSeq = [];
+            setTimeout(nextMemLevel, 500);
+        }
+        function nextMemLevel() {
+            if(!gameState.isPlaying) return;
+            usrSeq = [];
+            memLock = true;
+            document.getElementById('memory-instruction').innerText = "WATCH...";
+            document.getElementById('memory-instruction').className = "text-sky-400 mb-6 text-sm font-bold uppercase tracking-widest";
+            memSeq.push(Math.floor(Math.random()*9));
+            document.getElementById('memory-level').innerText = memSeq.length;
+
+            let i=0;
+            const int = setInterval(() => {
+                const cells = document.querySelectorAll('.memory-cell');
+                cells[memSeq[i]].classList.add('active');
+                playSound('tick');
+                setTimeout(() => cells[memSeq[i]].classList.remove('active'), 400);
+                i++;
+                if(i >= memSeq.length) {
+                    clearInterval(int);
+                    memLock = false;
+                    setTimeout(() => {
+                        document.getElementById('memory-instruction').innerText = "REPEAT!";
+                        document.getElementById('memory-instruction').className = "text-green-400 mb-6 text-sm font-bold uppercase tracking-widest";
+                    }, 500);
+                }
+            }, 800 - (gameState.score * 5));
+        }
+        function handleMemClick(idx) {
+            if(memLock || !gameState.isPlaying) return;
+            const cells = document.querySelectorAll('.memory-cell');
+            cells[idx].classList.add('user-correct');
+            setTimeout(() => cells[idx].classList.remove('user-correct'), 200);
+            playSound('tick');
+            
+            usrSeq.push(idx);
+            if(usrSeq[usrSeq.length-1] !== memSeq[usrSeq.length-1]) {
+                cells[idx].classList.remove('user-correct');
+                cells[idx].classList.add('user-wrong');
+                gameOver();
+                return;
+            }
+            if(usrSeq.length === memSeq.length) {
+                updateScore(5);
+                setTimeout(nextMemLevel, 1000);
+            }
+        }
+
+        // --- GAME 4: DIRECTION DASH ---
+        const dirs = ['up', 'down', 'left', 'right'];
+        const dirIcons = {'up': 'fa-arrow-up', 'down': 'fa-arrow-down', 'left': 'fa-arrow-left', 'right': 'fa-arrow-right'};
+        
+        function nextDirectionRound() {
+            if(!gameState.isPlaying) return;
+            
+            const time = Math.max(1000, 2500 - (gameState.score * 40));
+            startTimer('direction-timer', time, gameOver);
+
+            const visualDir = dirs[Math.floor(Math.random() * 4)];
+            const isGreen = Math.random() > 0.4; // 60% chance green (easier habit)
+            
+            // LOGIC: Green = same, Red = opposite
+            let correctDir = visualDir;
+            if(!isGreen) {
+                if(visualDir === 'up') correctDir = 'down';
+                if(visualDir === 'down') correctDir = 'up';
+                if(visualDir === 'left') correctDir = 'right';
+                if(visualDir === 'right') correctDir = 'left';
+            }
+            gameState.dashCorrectDir = correctDir;
+
+            const arrow = document.getElementById('dash-arrow');
+            arrow.className = `fas ${dirIcons[visualDir]} text-8xl transition-all duration-200 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] ${isGreen ? 'text-green-500' : 'text-red-500'}`;
+            
+            // Pop effect
+            arrow.style.transform = 'scale(0.5)';
+            setTimeout(() => arrow.style.transform = 'scale(1)', 50);
+        }
+
+        function handleDirectionInput(dir) {
+            if(!gameState.isPlaying) return;
+            if(dir === gameState.dashCorrectDir) {
+                updateScore(1);
+                nextDirectionRound();
+            } else {
+                gameOver();
+            }
+        }
+
+        // --- GAME 5: SYMBOL STREAM (N-BACK) ---
+        const symbols = ['fa-star', 'fa-heart', 'fa-bolt', 'fa-moon', 'fa-cloud', 'fa-ghost', 'fa-gem'];
+        
+        function initSymbol() {
+            gameState.lastSymbol = null;
+            gameState.currentSymbol = null;
+            nextSymbolRound();
+        }
+
+        function nextSymbolRound() {
+            if(!gameState.isPlaying) return;
+
+            // Prepare next symbol
+            // Logic: 40% chance of being same as last to force memory check
+            let nextSym;
+            if(gameState.lastSymbol && Math.random() < 0.4) {
+                nextSym = gameState.lastSymbol;
+            } else {
+                nextSym = symbols[Math.floor(Math.random() * symbols.length)];
+                // Avoid accidental same if random picked same
+                if(gameState.lastSymbol && nextSym === gameState.lastSymbol && Math.random() > 0.5) {
+                    // Try to change it (simple retry)
+                     nextSym = symbols[Math.floor(Math.random() * symbols.length)];
+                }
+            }
+
+            // Move current to last
+            gameState.lastSymbol = gameState.currentSymbol;
+            gameState.currentSymbol = nextSym;
+
+            // Display
+            const display = document.getElementById('symbol-display');
+            display.innerHTML = `<i class="fas ${nextSym}"></i>`;
+            display.style.transform = 'scale(0.5)';
+            display.style.opacity = '0';
+            setTimeout(() => {
+                display.style.transform = 'scale(1)';
+                display.style.opacity = '1';
+            }, 50);
+
+            // Timer (This game is auto-running/reaction based)
+            // But to keep it simple for user UI: wait for input
+            // If it's the first round, auto-skip or tell user to wait?
+            // Let's make it input based. User MUST click Yes or No.
+            
+            const time = Math.max(1500, 3000 - (gameState.score * 30));
+            startTimer('symbol-timer', time, gameOver); // User must decide quickly
+        }
+
+        function handleSymbolInput(userSaysSame) {
+            if(!gameState.isPlaying) return;
+
+            // First round special case: No previous symbol
+            if(gameState.lastSymbol === null) {
+                // Technically "No" is correct, or we just give free pass
+                // Let's treat it as "New Start", give pass but no points?
+                // Or easier: Just Generate new round and tell user "Remember This"
+                const fb = document.getElementById('symbol-feedback');
+                fb.innerText = "Memorize this...";
+                fb.style.opacity = 1;
+                setTimeout(() => fb.style.opacity = 0, 500);
+                
+                // Don't update score, just next
+                nextSymbolRound();
+                return;
+            }
+
+            const isActuallySame = (gameState.currentSymbol === gameState.lastSymbol);
+
+            if(userSaysSame === isActuallySame) {
+                updateScore(1);
+                nextSymbolRound();
+            } else {
+                gameOver();
+            }
+        }
+
+    </script>
+</body>
+                  </html>
